@@ -11,10 +11,14 @@ from django.shortcuts           import render
 from django.http                import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 
-from payment.forms  import AcquireForm
+from payment.forms  import AcquireForm, InvoiceForm
 from payment.models import UserProfile 
 
 from wordpay.charger import Charger
+
+from invoicer.rating.rating import parseSDR
+from invoicer.pdf.invoice import generateInvoicePDF
+from invoicer.customer.customer import customerDetails
 
 import json
 
@@ -42,29 +46,85 @@ def acquire(request):
         'form': form,
     })
 
-def getCustomerDetails(request, contract):
+def invoice(request, username):
     
-    profiles = UserProfile.objects.filter(contract_id=contract)
+    if request.method == 'POST': 
+        
+        form = InvoiceForm(request.POST, request.FILES) 
+        
+        if form.is_valid(): 
+            return generatePDF(request.FILES['sdr'], getData(form, 'username'))
+    else:
+        form = InvoiceForm(initial = {"username": username}) 
+
+    return render(request, 'invoice_user.html', {
+        'form': form,
+        'username': username,
+    })
     
-    if (len(profiles) != 1):
+def generatePDF(sdrContent, username):
+    response = HttpResponse(mimetype='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+    
+    json = parseSDR(sdrContent, username)
+    json = customerDetails(json)
+    generateInvoicePDF(json, 'invoice.pdf')
+    
+    with open("invoice.pdf", 'r') as f:
+        pdfContent = f.read()
+    
+    response.write(pdfContent)
+    
+    return response
+    
+def getCustomers(request):
+    
+    users = User.objects.filter(is_superuser=False)
+    
+    return render(request, 'list_users.html', {
+        'users': users,
+    })
+    
+def invoiceCustomer(request, username):
+    users = User.objects.filter(username=username)
+    
+    if (len(users) != 1):
         return HttpResponse(json.dumps({}), mimetype="application/json")
     
-    profile = profiles[0]
+    user = users[0]
     
-    user = profile.user
+    return render(request, 'invoice_user.html', {
+        'user': user,
+    }) 
+
+def getCustomerData(request, username):
+    
+    users = User.objects.filter(username=username)
+    
+    if (len(users) != 1):
+        return HttpResponse(json.dumps({}), mimetype="application/json")
+    
+    user = users[0]
+    
+    data = accessCustomerData(user)
+    
+    return HttpResponse(json.dumps(data), mimetype="application/json")
+
+def accessCustomerData(user):
+    profile = user.get_profile()
     
     full_name = u'{0} {1}'.format(user.first_name, user.last_name)
     
     data =  {
             'name'       : full_name, 
-            'address'    : user.address, 
-            'city'       : user.city, 
-            'postal_code': user.postal_code, 
+            'address'    : profile.address, 
+            'city'       : profile.city, 
+            'postal_code': profile.postal_code, 
             'email'      : user.email,
-            'country'    : user.country
+            'country'    : profile.country
             }
     
-    return HttpResponse(json.dumps(data), mimetype="application/json")
+    return data
 
 def createUser(acquireForm):
     username = getData(acquireForm, 'username')

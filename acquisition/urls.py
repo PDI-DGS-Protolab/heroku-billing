@@ -7,7 +7,12 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('',
     
     url(r'^$', 'payment.views.acquire'),
-    url(r'^customerDetails/(\d+)/$', 'payment.views.getCustomerDetails'),
+    
+    url(r'^customers/$', 'payment.views.getCustomers'),
+    url(r'^customers/(\w+)/$', 'payment.views.invoice'),
+    url(r'^customers/(\w+)/data/$', 'payment.views.getCustomerData'),
+    
+    #url(r'^customerDetails/(\d+)/$', 'payment.views.getCustomerDetails'),
     
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -8,6 +8,8 @@ from BeautifulSoup import BeautifulSoup
 from payment.wordpay.payloads import FIRST_PAYMENT_PAYLOAD, RECURRENT_PAYMENT_PAYLOAD
 from payment.gateway_interface.PaymentGateway import PaymentGateway
 
+from payment.forms import COUNTRIES_CODE
+
 class Charger (PaymentGateway):
 
 	URL = "https://secure-test.worldpay.com/jsp/merchant/xml/paymentService.jsp"
@@ -55,13 +57,17 @@ class Charger (PaymentGateway):
 	
 	def getRedirectUrl(self, profile):
 		
+		countryCode = COUNTRIES_CODE[profile.country]
+		
 		xml = FIRST_PAYMENT_PAYLOAD % {
 										"merchantCode" : self.USERNAME, 
 										"fillmoney": self.MONEY, 
 										"ordercode" : self.order,
 										"city" : profile.city,
 										"address" : profile.address,
-										"postal_code" : profile.postal_code
+										"postal_code" : profile.postal_code,
+										"country": countryCode,
+										"phone": profile.phone
 									  }
 		
 		doc = self.getResponseDocument(xml, self.USERNAME, self.PASSWORD)

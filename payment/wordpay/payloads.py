@@ -43,8 +43,8 @@ FIRST_PAYMENT_PAYLOAD = """<?xml version="1.0" encoding="UTF-8"?>
     <address3></address3>
     <postalCode>%(postal_code)s</postalCode>
     <city>%(city)s</city>
-    <countryCode>GB</countryCode>
-    <telephoneNumber>0034686489600</telephoneNumber>
+    <countryCode>%(country)s</countryCode>
+    <telephoneNumber>%(phone)s</telephoneNumber>
     </address>
     </shippingAddress>
     </order>
