@@ -11,6 +11,15 @@ FOLDER = os.getcwd()
 AUTH_PROFILE_MODULE = 'payment.UserProfile'
 
 ######################################################
+# AMAZON WEB SERVICES (AWS)
+######################################################
+
+AWS_ACCESS_KEY_ID     = 'AKIAJMHIR5XUG3EAMK7A'
+AWS_SECRET_ACCESS_KEY = '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'
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+######################################################
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -125,6 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'payment',
+    'invoicer',
     'djcelery',
     'kombu.transport.django',
     'gunicorn',
@@ -170,5 +180,3 @@ BROKER_BACKEND = 'django'
 
 import djcelery
 djcelery.setup_loader()
-
-

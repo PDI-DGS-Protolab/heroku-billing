@@ -20,6 +20,8 @@ from invoicer.rating.rating import parseSDR
 from invoicer.pdf.invoice import generateInvoicePDF
 from invoicer.customer.customer import customerDetails
 
+from invoicer.tasks import executeProcess
+
 import json
 
 def acquire(request):
@@ -52,8 +54,12 @@ def invoice(request, username):
         
         form = InvoiceForm(request.POST, request.FILES) 
         
-        if form.is_valid(): 
-            return generatePDF(request.FILES['sdr'], getData(form, 'username'))
+        if form.is_valid():
+            createTask(request.FILES['sdr'], getData(form, 'username'))
+            
+            return render(request, 'invoicing.html', {})
+        
+            #return generatePDF(request.FILES['sdr'], getData(form, 'username'))
     else:
         form = InvoiceForm(initial = {"username": username}) 
 
@@ -61,6 +67,17 @@ def invoice(request, username):
         'form': form,
         'username': username,
     })
+
+def createTask(sdrContent, username):
+    
+    xml = sdrContent.read()
+    
+    executeProcess(xml, username)
+    
+    response = HttpResponse()
+
+    return response
+    
     
 def generatePDF(sdrContent, username):
     response = HttpResponse(mimetype='application/pdf')
