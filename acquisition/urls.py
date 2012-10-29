@@ -1,5 +1,7 @@
 from django.conf.urls import patterns, url
 
+import settings
+
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -11,6 +13,8 @@ urlpatterns = patterns('',
     url(r'^customers/$', 'payment.views.getCustomers'),
     url(r'^customers/(\w+)/$', 'payment.views.invoice'),
     url(r'^customers/(\w+)/data/$', 'payment.views.getCustomerData'),
+    
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT, 'show_indexes':True}), 
     
     #url(r'^customerDetails/(\d+)/$', 'payment.views.getCustomerDetails'),
     
