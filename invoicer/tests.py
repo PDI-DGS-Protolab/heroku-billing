@@ -1,16 +1,24 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
+import unittest
 
-Replace this with more appropriate tests for your application.
-"""
+from tasks    import downloadAndParseSDRTask
+from services import addInvoiceTasksFromS3
 
-from django.test import TestCase
+from common.aws.s3 import getSDRRequestKeys
 
-
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+class TestDownloadFromS3Case(unittest.TestCase):
+    def testDownloadAndParseSDR(self):
+        
+        json = downloadAndParseSDRTask('sdr.xml')
+        
+        self.assertEqual(json['total'], 1266.4631999999999)
+        
+    def testGetSDRRequestKeys(self):
+        
+        keys = getSDRRequestKeys()
+        
+        self.assertEqual(keys, ['sdr.xml'])
+    
+    def testAddInvoiceTasksFromS3(self):
+        
+        return
+        addInvoiceTasksFromS3()

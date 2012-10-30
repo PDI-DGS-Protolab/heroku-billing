@@ -9,28 +9,34 @@ Created on 15/10/2012
 
 from celery import task
  
-from rating.rating import parseSDR
-from pdf.invoice import generateInvoicePDF
-from customer.customer import  customerDetails
-
-from django.core.mail import send_mail
-
-@task(ignore_result=True)
-def readSDR(sdr, username):
-    return parseSDR(sdr, username)
+from rating.rating     import downloadAndParseSDR
+from pdf.invoice       import generatePDFAndUpload
+from customer.customer import customerDetails
+from email.email       import sendEmail
 
 @task(ignore_result=True)
-def generateInvoice(invoiceJson, filename):
-    return generateInvoicePDF(invoiceJson, filename)
+def downloadAndParseSDRTask(bucket_key):
+    return downloadAndParseSDR(bucket_key)
 
 @task(ignore_result=True)
-def getCustomerDetails(json):
+def generatePDFAndUploadTask(invoiceJson):
+    return generatePDFAndUpload(invoiceJson)
+
+@task(ignore_result=True)
+def getCustomerDetailsTask(json):
     return customerDetails(json)
 
 @task(ignore_result=True)
-def sendEmail(json):
-    send_mail('Test', 'Su factura', 'macvaz82@gmail.com', ['mac@tid.es'], fail_silently=False)
+def sendEmailTask(json):
+    sendEmail(json)
 
-def executeProcess(xml, username):
-    chain = readSDR.s(xml, username) | getCustomerDetails.s() | generateInvoice.s('invoice1.pdf') | sendEmail.s()
+def startProcessFromS3(bucket_key):
+    chain = downloadAndParseSDRTask.s(bucket_key) | getCustomerDetailsTask.s() | generatePDFAndUploadTask.s() | sendEmailTask.s()
+            
     chain()
+
+def startSyncProcessFromS3(bucket_key):
+    json = downloadAndParseSDRTask(bucket_key)
+    json = getCustomerDetailsTask(json)
+    json = generatePDFAndUploadTask(json) 
+    sendEmailTask(json)

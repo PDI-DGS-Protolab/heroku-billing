@@ -122,8 +122,8 @@ ROOT_URLCONF = 'acquisition.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'acquisition.wsgi.application'
 
-TEMPLATE_DIRS = (
-    os.path.join(FOLDER, 'templates'),    
+TEMPLATE_DIRS = (  
+    os.path.join(FOLDER, 'templates'),
 )
 
 INSTALLED_APPS = (

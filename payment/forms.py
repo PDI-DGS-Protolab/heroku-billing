@@ -49,7 +49,3 @@ class AcquireForm(forms.Form):
             raise forms.ValidationError("Emails must match")
 
         return email
-
-class InvoiceForm(forms.Form):
-    username   = forms.CharField(max_length=30, min_length=3, widget=forms.HiddenInput())
-    sdr        = forms.FileField()

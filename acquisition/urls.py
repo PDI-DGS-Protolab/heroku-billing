@@ -10,15 +10,11 @@ urlpatterns = patterns('',
     
     url(r'^$', 'payment.views.acquire'),
     
-    url(r'^customers/$', 'payment.views.getCustomers'),
-    url(r'^customers/(\w+)/$', 'payment.views.invoice'),
-    url(r'^customers/(\w+)/data/$', 'payment.views.getCustomerData'),
+    url(r'^launchInvoice/$',        'invoicer.views.launchInvoice'),
+    url(r'^launchSyncInvoice/$',    'invoicer.views.launchSyncInvoice'),
     
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT, 'show_indexes':True}), 
     
-    #url(r'^customerDetails/(\d+)/$', 'payment.views.getCustomerDetails'),
-    
-
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

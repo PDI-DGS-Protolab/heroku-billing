@@ -11,6 +11,8 @@ URL = "http://10.95.193.53:8080/customers/{0}/data"
 
 from django.contrib.auth.models import User
 
+from payment.services import accessCustomerData
+
 def customerDetails(invoiceData):
     username = invoiceData['contract']
     
@@ -29,8 +31,6 @@ def downloadUserProfile(username):
     return json.loads(customer_details)
 
 def loadUserProfile(username):
-    from payment.views import accessCustomerData
-    
     users = User.objects.filter(username=username)
     
     if (len(users) != 1):

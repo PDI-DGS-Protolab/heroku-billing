@@ -10,7 +10,14 @@ Created on 10/10/2012
 from constants import CATALOGUE, TAX
 from BeautifulSoup import BeautifulSoup
 
-def parseSDR(xml, username):
+from common.aws.s3 import getBucketKeyContent
+
+def downloadAndParseSDR(bucket_key):
+    xml = getBucketKeyContent(bucket_key)
+    
+    return parseSDR(xml, bucket_key)
+
+def parseSDR(xml, file_name):
     doc = BeautifulSoup(xml)
     
     result = {}
@@ -32,9 +39,7 @@ def parseSDR(xml, username):
             print "ERROR: TOO MANY different contracts!!!"
             return
     
-    #TODO: READ user form SDR file
-    #result['contract'] = str(first_contract)
-    result['contract'] = str(username)
+    result['contract'] = str(first_contract)
     
     consumptions = doc.findAll('consumo_variable')
     
@@ -60,7 +65,8 @@ def parseSDR(xml, username):
     # Computing taxes
     result['taxes'] = result['total'] - result['subtotal']
     
-
+    # Adding file_name for naming PDF
+    result['sdr_file_name'] = file_name
     
     return result
 
