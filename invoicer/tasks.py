@@ -43,6 +43,6 @@ def startProcessFromS3(bucket_key):
 def startSyncProcessFromS3(bucket_key):
     json = downloadAndParseSDRTask(bucket_key)
     json = getCustomerDetailsTask(json)
-    #json = generatePDFAndUploadTask(json) 
-    #json = sendEmailTask(json)
+    json = generatePDFAndUploadTask(json) 
+    json = sendEmailTask(json)
     json = chargeTask(json)
