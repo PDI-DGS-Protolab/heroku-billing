@@ -12,6 +12,9 @@ from BeautifulSoup import BeautifulSoup
 
 from common.aws.s3 import getBucketKeyContent
 
+def roundPrice(price):
+    return round(price*100)/100
+
 def downloadAndParseSDR(bucket_key):
     xml = getBucketKeyContent(bucket_key)
     
@@ -57,13 +60,13 @@ def parseSDR(xml, file_name):
         result['subtotal'] += invoiceEntry['total']
     
     # Computing subtotal
-    result['total'] = getTax() * result['subtotal']
+    result['total'] = roundPrice(getTax() * result['subtotal'])
     
     # Computing subtotal
     result['tax_rate'] = (getTax() - 1) * 100
     
     # Computing taxes
-    result['taxes'] = result['total'] - result['subtotal']
+    result['taxes'] = roundPrice(result['total'] - result['subtotal'])
     
     # Adding file_name for naming PDF
     result['sdr_file_name'] = file_name
@@ -79,7 +82,7 @@ def createInvoiceEntry(concept, price, description, amount):
             'price': price, 
             'description': unicode(description), 
             'amount': amount, 
-            'total': price*amount
+            'total': roundPrice(price*amount)
             }
 
 def get_value(element):

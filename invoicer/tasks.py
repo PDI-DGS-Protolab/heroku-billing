@@ -13,6 +13,7 @@ from rating.rating     import downloadAndParseSDR
 from pdf.invoice       import generatePDFAndUpload
 from customer.customer import customerDetails
 from email.email       import sendEmail
+from charging.charging import charge
 
 @task(ignore_result=True)
 def downloadAndParseSDRTask(bucket_key):
@@ -28,15 +29,20 @@ def getCustomerDetailsTask(json):
 
 @task(ignore_result=True)
 def sendEmailTask(json):
-    sendEmail(json)
+    return sendEmail(json)
+
+@task(ignore_result=True)
+def chargeTask(json):
+    return charge(json)
 
 def startProcessFromS3(bucket_key):
-    chain = downloadAndParseSDRTask.s(bucket_key) | getCustomerDetailsTask.s() | generatePDFAndUploadTask.s() | sendEmailTask.s()
+    chain = downloadAndParseSDRTask.s(bucket_key) | getCustomerDetailsTask.s() | generatePDFAndUploadTask.s() | sendEmailTask.s() | chargeTask.s()
             
     chain()
 
 def startSyncProcessFromS3(bucket_key):
     json = downloadAndParseSDRTask(bucket_key)
     json = getCustomerDetailsTask(json)
-    json = generatePDFAndUploadTask(json) 
-    sendEmailTask(json)
+    #json = generatePDFAndUploadTask(json) 
+    #json = sendEmailTask(json)
+    json = chargeTask(json)

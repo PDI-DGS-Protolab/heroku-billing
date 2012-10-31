@@ -17,3 +17,5 @@ def sendEmail(json):
     emailMessage.attach_file(file_name, 'application/pdf')
     
     emailMessage.send(fail_silently=True)
+    
+    return json

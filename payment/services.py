@@ -60,12 +60,13 @@ def accessCustomerData(user):
             'city'       : profile.city, 
             'postal_code': profile.postal_code, 
             'email'      : user.email,
-            'country'    : profile.country
+            'country'    : profile.country,
+            'order'      : profile.order_id
             }
     
     return data
 
-def initialPaymentUrl(form, user):
+def initialPaymentUrl(form):
     # Only WorldPay at the moment
     charger = Charger()
     

@@ -82,13 +82,16 @@ class Charger (PaymentGateway):
 	def getOrder(self):
 		return self.order
 
+	# total must be a float formatted to two decimal points
 	def recurrentPayment(self, lastOrder, total):
+		
+		integerTotal = int(total*100)
 		
 		order = self.computeOrderId()
 		
 		xml = RECURRENT_PAYMENT_PAYLOAD % {
 											"merchantCode": self.RECURRENT_USERNAME, 
-											"fillmoney": total, 
+											"fillmoney": integerTotal, 
 											"ordercode": order, 
 											"lastordercode": lastOrder, 
 											"firstMerchantCode": self.USERNAME
