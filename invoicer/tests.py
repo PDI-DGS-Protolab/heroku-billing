@@ -7,7 +7,7 @@ from common.aws.s3 import getSDRRequestKeys
 class TestDownloadFromS3Case(unittest.TestCase):
     def testDownloadAndParseSDR(self):
         
-        json = downloadAndParseSDRTask('sdr.xml')
+        json = downloadAndParseSDRTask('salesforce.macvaz82.xml')
         
         self.assertEqual(json['total'], float(1266.49))
         
@@ -15,4 +15,4 @@ class TestDownloadFromS3Case(unittest.TestCase):
         
         keys = getSDRRequestKeys()
         
-        self.assertEqual(keys, ['sdr.xml'])
+        self.assertEqual(keys, ['salesforce.macvaz82.xml'])

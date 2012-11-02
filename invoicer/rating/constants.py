@@ -104,6 +104,7 @@ CATALOGUE['02008'] = {'price': 0.131, 'description': "riak-1.6.0 S 2GB"}
 CATALOGUE['03008'] = {'price': 0.184, 'description': "riak-1.6.0 M 4GB"}
 CATALOGUE['04008'] = {'price': 0.277, 'description': "riak-1.6.0 L 8GB"}
 CATALOGUE['05008'] = {'price': 0.492, 'description': "riak-1.6.0 XL 16GB"}
+
 # Riakeds
 #Note : No price list for Riackeds
 #CATALOGUE['01009'] = {'price': 0.065, 'description': "Riakeds XS 1GB"}
