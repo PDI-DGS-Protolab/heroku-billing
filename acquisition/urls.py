@@ -10,6 +10,10 @@ urlpatterns = patterns('',
     
     url(r'^$', 'payment.views.acquire'),
     
+    url(r'^success$', 'payment.views.success'),
+    url(r'^pending$', 'payment.views.pending'),
+    url(r'^error$',   'payment.views.error'),
+    
     url(r'^launchInvoice/$',        'invoicer.views.launchInvoice'),
     url(r'^launchSyncInvoice/$',    'invoicer.views.launchSyncInvoice'),
     

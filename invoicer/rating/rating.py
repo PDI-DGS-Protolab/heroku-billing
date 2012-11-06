@@ -7,7 +7,7 @@ Created on 10/10/2012
 @author: mac
 '''
 
-from constants import CATALOGUE, TAX
+from catalogue import CATALOGUE, TAX
 from BeautifulSoup import BeautifulSoup
 
 from common.aws.s3 import getBucketKeyContent

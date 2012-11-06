@@ -14,6 +14,10 @@ class Charger (PaymentGateway):
 
 	URL = "https://secure-test.worldpay.com/jsp/merchant/xml/paymentService.jsp"
 	
+	SUCCESS_CALLBACK = "http://globalbilling.herokuapp.com/success"
+	PENDING_CALLBACK = "http://globalbilling.herokuapp.com/pending"
+	ERROR_CALLBACK   = "http://globalbilling.herokuapp.com/error"
+	
 	USERNAME = "GLOBALBILLINGEUR"
 	PASSWORD = "xml2012launch"
 	
@@ -76,8 +80,11 @@ class Charger (PaymentGateway):
 			return
 
 		redirectUrl = doc.find('reference').text
+		
+		finalUrl = "{0}&successURL={1}&pendingURL={2}&failureURL={3}".format(redirectUrl, self.SUCCESS_CALLBACK, 
+																			 self.PENDING_CALLBACK, self.ERROR_CALLBACK)
 			
-		return redirectUrl
+		return finalUrl
 
 	def getOrder(self):
 		return self.order

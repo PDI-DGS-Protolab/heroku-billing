@@ -46,13 +46,13 @@ def chargeTask(json):
     return charge(json)
 
 def startProcessFromS3(bucket_key):
-    chain = downloadAndParseSDRTask.s(bucket_key) | getCustomerDetailsFromSalesForceTask.s() | generatePDFAndUploadTask.s() | sendEmailTask.s() | chargeTask.s() | uploadOrderLineToSalesForce.s()
+    chain = downloadAndParseSDRTask.s(bucket_key) | getCustomerDetailsTask.s() | generatePDFAndUploadTask.s() | sendEmailTask.s() | chargeTask.s() | uploadOrderLineToSalesForce.s()
             
     chain()
 
 def startSyncProcessFromS3(bucket_key):
     json = downloadAndParseSDRTask(bucket_key)
-    json = getCustomerDetailsFromSalesForceTask(json)
+    json = getCustomerDetailsTask(json)
     json = generatePDFAndUploadTask(json) 
     json = sendEmailTask(json)
     json = chargeTask(json)
