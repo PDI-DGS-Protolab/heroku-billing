@@ -12,14 +12,14 @@ from django.contrib.auth.models import User
 from models          import UserProfile 
 from wordpay.charger import Charger
 
-from common.form_tools import getData
+from common.form_tools import get_data
 
-def createUser(acquireForm):
-    username = getData(acquireForm, 'username')
+def create_user(acquire_form):
+    username = get_data(acquire_form, 'username')
     
-    first_name  = getData(acquireForm, 'first_name')
-    last_name   = getData(acquireForm, 'last_name')
-    email       = getData(acquireForm, 'email')
+    first_name  = get_data(acquire_form, 'first_name')
+    last_name   = get_data(acquire_form, 'last_name')
+    email       = get_data(acquire_form, 'email')
     
     user = User(username=username, first_name=first_name, 
                 last_name=last_name, email=email)
@@ -28,20 +28,20 @@ def createUser(acquireForm):
     
     return user
 
-def createProfile(acquireForm, charger, user):
+def create_profile(acquire_form, charger, user):
     
-    title       = getData(acquireForm, 'title')
+    title       = get_data(acquire_form, 'title')
     
-    phone       = getData(acquireForm, 'phone')
-    company     = getData(acquireForm, 'company')
+    phone       = get_data(acquire_form, 'phone')
+    company     = get_data(acquire_form, 'company')
     
-    address     = getData(acquireForm, 'address')
-    postal_code = getData(acquireForm, 'postal_code')
-    city        = getData(acquireForm, 'city')
-    country     = getData(acquireForm, 'country')
+    address     = get_data(acquire_form, 'address')
+    postal_code = get_data(acquire_form, 'postal_code')
+    city        = get_data(acquire_form, 'city')
+    country     = get_data(acquire_form, 'country')
        
     profile = UserProfile(user=user, phone=phone, company=company,
-                          order_id=charger.getOrder(), 
+                          order_id=charger.get_order(), 
                           title=title, address=address,
                           city=city, country=country,
                           postal_code=postal_code)
@@ -49,7 +49,7 @@ def createProfile(acquireForm, charger, user):
     
     return profile
 
-def accessCustomerData(user):
+def access_customer_data(user):
     profile = user.get_profile()
     
     full_name = u'{0} {1}'.format(user.first_name, user.last_name)
@@ -66,13 +66,13 @@ def accessCustomerData(user):
     
     return data
 
-def initialPaymentUrl(form):
+def initial_payment_url(form):
     # Only WorldPay at the moment
     charger = Charger()
     
-    user = createUser(form)
-    profile = createProfile(form, charger, user)
+    user = create_user(form)
+    profile = create_profile(form, charger, user)
     
-    url = charger.getRedirectUrl(profile)
+    url = charger.get_redirect_url(profile)
     
     return url

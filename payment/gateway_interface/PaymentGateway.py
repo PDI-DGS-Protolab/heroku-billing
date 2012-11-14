@@ -8,16 +8,16 @@ import uuid
 
 class PaymentGateway:
     
-    def getRedirectUrl(self, profile):
+    def get_redirect_rrl(self, profile):
         pass
 
-    def recurrentPayment(self, lastOrder, total):
+    def recurrent_payment(self, lastOrder, total):
         pass
 
-    def getOrder(self):
+    def get_order(self):
         return self.order
     
-    def computeOrderId(self):
+    def compute_order_id(self):
         uid = uuid.uuid4()
         
         # Order = ten first characters of uuid

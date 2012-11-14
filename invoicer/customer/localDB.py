@@ -6,17 +6,17 @@ Created on 16/10/2012
 
 from django.contrib.auth.models import User
 
-from payment.services import accessCustomerData
+from payment.services import access_customer_data
 
-def customerDetails(invoiceData):
-    username = invoiceData['contract']
+def customer_details(invoice_data):
+    username = invoice_data['contract']
     
     # Adding customer details
-    invoiceData['customer'] = loadUserProfile(username)
+    invoice_data['customer'] = load_user_profile(username)
     
-    return invoiceData
+    return invoice_data
 
-def loadUserProfile(username):
+def load_user_profile(username):
     users = User.objects.filter(username=username)
     
     if (len(users) != 1):
@@ -25,4 +25,4 @@ def loadUserProfile(username):
     
     user = users[0]
 
-    return accessCustomerData(user)
+    return access_customer_data(user)

@@ -13,6 +13,6 @@ def charge(json):
     order  = json['customer']['order']
     amount = json['total']
 
-    charger.recurrentPayment(order, amount)
+    charger.recurrent_payment(order, amount)
     
     return json

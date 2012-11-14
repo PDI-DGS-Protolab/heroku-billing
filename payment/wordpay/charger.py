@@ -27,9 +27,9 @@ class Charger (PaymentGateway):
 	MONEY = 128
 	
 	def __init__(self):
-		self.order = self.computeOrderId()
+		self.order = self.compute_order_id()
 		
-	def getResponseDocument(self, xml, username, password):
+	def get_response_document(self, xml, username, password):
 		
 		password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
 		password_mgr.add_password(None, self.URL, username, password)
@@ -46,11 +46,11 @@ class Charger (PaymentGateway):
 		
 		try:
 			f = opener.open(req)
-			responseXml = f.read()
+			response_xml = f.read()
 			
-			print responseXml
+			print response_xml
 			
-			doc = BeautifulSoup(responseXml)
+			doc = BeautifulSoup(response_xml)
 			
 			return doc
 			
@@ -59,9 +59,9 @@ class Charger (PaymentGateway):
 			print "Errortransaction. HTTP Error code:",e.code
 			return None
 	
-	def getRedirectUrl(self, profile):
+	def get_redirect_url(self, profile):
 		
-		countryCode = COUNTRIES_CODE[profile.country]
+		country_code = COUNTRIES_CODE[profile.country]
 		
 		xml = FIRST_PAYMENT_PAYLOAD % {
 										"merchantCode" : self.USERNAME, 
@@ -70,41 +70,41 @@ class Charger (PaymentGateway):
 										"city" : profile.city,
 										"address" : profile.address,
 										"postal_code" : profile.postal_code,
-										"country": countryCode,
+										"country": country_code,
 										"phone": profile.phone
 									  }
 		
-		doc = self.getResponseDocument(xml, self.USERNAME, self.PASSWORD)
+		doc = self.get_response_document(xml, self.USERNAME, self.PASSWORD)
 		
 		if (not doc):
 			return
 
-		redirectUrl = doc.find('reference').text
+		redirect_url = doc.find('reference').text
 		
-		finalUrl = "{0}&successURL={1}&pendingURL={2}&failureURL={3}".format(redirectUrl, self.SUCCESS_CALLBACK, 
+		finalUrl = "{0}&successURL={1}&pendingURL={2}&failureURL={3}".format(redirect_url, self.SUCCESS_CALLBACK, 
 																			 self.PENDING_CALLBACK, self.ERROR_CALLBACK)
 			
 		return finalUrl
 
-	def getOrder(self):
+	def get_order(self):
 		return self.order
 
 	# total must be a float formatted to two decimal points
-	def recurrentPayment(self, lastOrder, total):
+	def recurrent_payment(self, lastOrder, total):
 		
-		integerTotal = int(total*100)
+		integer_total = int(total*100)
 		
-		order = self.computeOrderId()
+		order = self.compute_order_id()
 		
 		xml = RECURRENT_PAYMENT_PAYLOAD % {
 											"merchantCode": self.RECURRENT_USERNAME, 
-											"fillmoney": integerTotal, 
+											"fillmoney": integer_total, 
 											"ordercode": order, 
 											"lastordercode": lastOrder, 
 											"firstMerchantCode": self.USERNAME
 											}
 		
-		doc = self.getResponseDocument(xml, self.RECURRENT_USERNAME, self.RECURRENT_PASSWORD)
+		doc = self.get_response_document(xml, self.RECURRENT_USERNAME, self.RECURRENT_PASSWORD)
 		
 		if (not doc):
 			return

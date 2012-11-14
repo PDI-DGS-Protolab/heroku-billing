@@ -7,12 +7,14 @@ Created on 16/10/2012
 @author: mac
 '''
 
-from django.shortcuts           import render
-from django.http                import HttpResponseRedirect
+from django.shortcuts import render
+from django.http      import HttpResponseRedirect
+from django.db        import transaction
 
 from forms    import AcquireForm
-from services import initialPaymentUrl
+from services import initial_payment_url
 
+@transaction.commit_on_success
 def acquire(request):
     
     if request.method == 'POST': 
@@ -21,7 +23,7 @@ def acquire(request):
         
         if form.is_valid(): 
                         
-            url = initialPaymentUrl(form)
+            url = initial_payment_url(form)
             
             return HttpResponseRedirect(url)
     else:

@@ -1,7 +1,7 @@
 '''
-Created on 06/11/2012
+This is an automatically generated file! Do no edit!
 
-@author: mac
+If price changes exists, modify the SF catalogue instead.
 '''
 
 TAX = 1.20

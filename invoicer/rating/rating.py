@@ -7,20 +7,21 @@ Created on 10/10/2012
 @author: mac
 '''
 
-from catalogue import CATALOGUE, TAX
 from BeautifulSoup import BeautifulSoup
 
-from common.aws.s3 import getBucketKeyContent
+from common.aws.s3 import get_bucket_key_content
 
-def roundPrice(price):
+from catalogue import CATALOGUE, TAX
+
+def round_price(price):
     return round(price*100)/100
 
-def downloadAndParseSDR(bucket_key):
-    xml = getBucketKeyContent(bucket_key)
+def download_and_parse_sdr(bucket_key):
+    xml = get_bucket_key_content(bucket_key)
     
-    return parseSDR(xml, bucket_key)
+    return parse_sdr(xml, bucket_key, CATALOGUE, TAX)
 
-def parseSDR(xml, file_name):
+def parse_sdr(xml, file_name, catalogue, tax):
     doc = BeautifulSoup(xml)
     
     result = {}
@@ -50,58 +51,61 @@ def parseSDR(xml, file_name):
         concept = str(get_content(consumption, 'concepto_facturable'))
         amount = float(get_content(consumption, 'unidades'))
         
-        price = float(get_price(concept))
-        description = get_description(concept)
+        price = float(get_price(catalogue, concept))
+        description = get_description(catalogue, concept)
         
-        invoiceEntry = createInvoiceEntry(concept, price, description, amount)
+        invoice_entry = create_invoice_entry(concept, price, description, amount)
         
-        result['items'].append(invoiceEntry)
+        result['items'].append(invoice_entry)
         
-        result['subtotal'] += invoiceEntry['total']
+        result['subtotal'] += invoice_entry['total']
     
     # Computing subtotal
-    result['total'] = roundPrice(getTax() * result['subtotal'])
+    result['total'] = round_price(tax * result['subtotal'])
     
     # Computing subtotal
-    result['tax_rate'] = (getTax() - 1) * 100
+    result['tax_rate'] = (tax - 1) * 100
     
     # Computing taxes
-    result['taxes'] = roundPrice(result['total'] - result['subtotal'])
+    result['taxes'] = round_price(result['total'] - result['subtotal'])
     
     # Adding file_name for naming PDF
     result['sdr_file_name'] = file_name
     
     return result
 
-def getTax():
-    return TAX
-
-def createInvoiceEntry(concept, price, description, amount):
+def create_invoice_entry(concept, price, description, amount):
     return {
             'concept': unicode(concept), 
             'price': price, 
             'description': unicode(description), 
             'amount': amount, 
-            'total': roundPrice(price*amount)
+            'total': round_price(price*amount)
             }
 
 def get_value(element):
     return element.string
 
-def get_price(concept):
-    if (CATALOGUE.get(concept, -1) == -1):
+def get_price(catalogue, concept):
+    if (catalogue.get(concept, -1) == -1):
         print("missing code: " + concept)
-        return -1;
+        return -1
         
-    return CATALOGUE[concept]['price']
+    return catalogue[concept]['price']
 
-def get_description(concept):
-    if (CATALOGUE.get(concept, -1) == -1):
+def get_description(catalogue, concept):
+    if (catalogue.get(concept, -1) == -1):
         print("missing code: " + concept)
-        return "";
+        return ""
         
-    return CATALOGUE[concept]['description']
+    return catalogue[concept]['description']
 
 
 def get_content(consumption, fieldName):
-    return getattr(consumption, fieldName).string
+    data = getattr(consumption, fieldName)
+    
+    if (not data):
+        print("missing field: " + fieldName)
+        return ""
+
+    return data.string

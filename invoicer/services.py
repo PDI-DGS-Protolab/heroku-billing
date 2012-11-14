@@ -7,21 +7,21 @@ Created on 16/10/2012
 @author: mac
 '''
 
-from common.aws.s3 import getSDRRequestKeys
-from invoicer.tasks import startProcessFromS3, startSyncProcessFromS3
+from common.aws.s3 import get_sdr_request_keys
+from invoicer.tasks import start_process_from_s3, start_sync_process_from_s3
     
-def addInvoiceTasksFromS3():
+def add_invoice_tasks_from_s3():
     
-    keys = getSDRRequestKeys()
+    keys = get_sdr_request_keys()
     
     for key in keys:
-        startProcessFromS3(key)
+        start_process_from_s3(key)
 
    
-def invoice1TaskFromS3():
+def invoice_1_task_from_s3():
     
-    keys = getSDRRequestKeys()
+    keys = get_sdr_request_keys()
     
     for key in keys:
-        startSyncProcessFromS3(key)
+        start_sync_process_from_s3(key)
         break

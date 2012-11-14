@@ -17,7 +17,7 @@ from constants import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, SDR_REQUESTS_BUC
 def connect():
     return S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
-def getSDRRequestKeys():
+def get_sdr_request_keys():
     conn = connect()
     
     bucket = conn.get_bucket(SDR_REQUESTS_BUCKET)
@@ -31,7 +31,7 @@ def getSDRRequestKeys():
     
     return keys
 
-def getBucketKeyContent(key_name):
+def get_bucket_key_content(key_name):
     
     conn = connect()
     
@@ -41,7 +41,7 @@ def getBucketKeyContent(key_name):
     
     return key.get_contents_as_string()
 
-def uploadInvoiceToS3(file_name):
+def upload_invoice_to_s3(file_name):
     conn = connect()
     
     bucket = conn.get_bucket(PDF_INVOICES_BUCKET)

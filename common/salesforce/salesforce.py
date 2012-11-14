@@ -8,12 +8,12 @@ from sforce.enterprise import SforceEnterpriseClient
 
 SF_PRICELIST_ID = 'a13J0000000CtwvIAC'
 
-SF_WSDL_PATH = 'salesforce-enterprise.wsdl'
+SF_WSDL_PATH = 'resources/wsdl/salesforce-enterprise.wsdl'
 SF_LOGIN     = 'agustin.martin@telefonica.com.dev'
 SF_PWD       = 'chipotl6'
 SF_TOKEN     = 'IVJeG9UJPc86xIY04jltqLoi'
 
-#SF_WSDL_PATH = 'mac-salesforce-enterprise.wsdl'
+#SF_WSDL_PATH = 'resources/wsdl/mac-salesforce-enterprise.wsdl'
 #SF_LOGIN     = 'mac@telefonicadigital.es'
 #SF_PWD       = 'tenderete13SA'
 #SF_TOKEN     = 'zTlg3IiXhRQNqWN7mcxwF3LP'
@@ -24,14 +24,14 @@ def connect():
     
     return c
 
-def getCustomers(accountId):
+def get_customers(account_id):
     
     c = connect()
     
     soql = """SELECT Email, Account.Name, Account.BillingCity, Account.BillingCountry, Account.BillingPostalCode, 
                      Account.BillingState, Account.BillingStreet 
               FROM   Contact 
-              WHERE  AccountId='{0}'""".format(accountId)
+              WHERE  AccountId='{0}'""".format(account_id)
 
     results = c.query(soql)
     
@@ -43,7 +43,7 @@ def getCustomers(accountId):
     
     return (contact, account)
 
-def getCatalogue():
+def get_catalogue():
     c = connect()
     
     soql = """SELECT Name, Price_per_Hour__c, Price_per_Month__c, Product_Code__c

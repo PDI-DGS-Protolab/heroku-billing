@@ -4,11 +4,11 @@ Created on 31/10/2012
 @author: amg
 '''
 
-from common.salesforce.salesforce import getCustomers
+from common.salesforce.salesforce import get_customers
 
-def getCustomerDetailsFromSalesForce(accountId):
+def get_customer_details_from_sf(account_id):
     
-    (contact, account) = getCustomers(accountId)
+    (contact, account) = get_customers(account_id)
     
     if contact == None:
         return {}
@@ -23,10 +23,10 @@ def getCustomerDetailsFromSalesForce(accountId):
             'order'      : 'f4f5e91595'
     }
 
-def customerDetailsFromSF(invoiceJson):
-    accountId = invoiceJson['contract']
+def customer_details_from_sf(invoice_json):
+    account_id = invoice_json['contract']
     
     # Adding customer details
-    invoiceJson['customer'] = getCustomerDetailsFromSalesForce(accountId)
+    invoice_json['customer'] = get_customer_details_from_sf(account_id)
     
-    return invoiceJson
+    return invoice_json

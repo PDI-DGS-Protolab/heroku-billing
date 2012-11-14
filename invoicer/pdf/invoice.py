@@ -16,21 +16,21 @@ LOGO_PATH     = 'invoicer/pdf/template/logo.png'
 
 import codecs
 
-from common.aws.s3 import uploadInvoiceToS3
+from common.aws.s3 import upload_invoice_to_s3
 
-def computeInvoiceDetails ():
+def compute_invoice_details ():
     return {
             'number': 23,
             'date': date.today(),
             'logo': unicode(LOGO_PATH)
            }
 
-def generatePDFAndUpload(invoice_json):
+def generate_pdf_and_upload(invoice_json):
     
     # Adding ".pdf" fo the name of the SDR file
     file_name = "{0}.pdf".format(invoice_json['sdr_file_name'])
     
-    invoice_json['invoice'] = computeInvoiceDetails()
+    invoice_json['invoice'] = compute_invoice_details()
     
     pisa.showLogging()
     
@@ -43,7 +43,7 @@ def generatePDFAndUpload(invoice_json):
         pdf = pisa.CreatePDF(template.render(invoice_json), f)
     
     if not pdf.err:                             
-        uploadInvoiceToS3(file_name)
+        upload_invoice_to_s3(file_name)
         
     invoice_json['pdf_file_name'] = file_name
 

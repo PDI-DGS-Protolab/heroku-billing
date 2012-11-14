@@ -9,28 +9,28 @@ Created on 15/10/2012
 
 from celery import task
  
-from rating.rating       import downloadAndParseSDR
-from pdf.invoice         import generatePDFAndUpload
-from customer.localDB    import customerDetails
-from customer.salesforce import customerDetailsFromSF
-from email.email         import sendEmail
+from rating.rating       import download_and_parse_sdr
+from pdf.invoice         import generate_pdf_and_upload
+from customer.localDB    import customer_details
+from customer.salesforce import customer_details_from_sf
+from email.email         import send_email
 from charging.charging   import charge
 
 @task(ignore_result=True)
-def downloadAndParseSDRTask(bucket_key):
-    return downloadAndParseSDR(bucket_key)
+def download_and_parse_sdr_task(bucket_key):
+    return download_and_parse_sdr(bucket_key)
 
 @task(ignore_result=True)
-def generatePDFAndUploadTask(invoiceJson):
-    return generatePDFAndUpload(invoiceJson)
+def generate_pdf_and_upload_task(invoiceJson):
+    return generate_pdf_and_upload(invoiceJson)
 
 @task(ignore_result=True)
-def getCustomerDetailsTask(json):
-    return customerDetails(json)
+def get_customer_details_task(json):
+    return customer_details(json)
 
 @task(ignore_result=True)
-def getCustomerDetailsFromSalesForceTask(json):
-    return customerDetailsFromSF(json)
+def get_customer_details_from_sf_task(json):
+    return customer_details_from_sf(json)
 
 @task(ignore_result=True)
 def uploadOrderLineToSalesForce(json):
@@ -38,21 +38,21 @@ def uploadOrderLineToSalesForce(json):
     return json
 
 @task(ignore_result=True)
-def sendEmailTask(json):
-    return sendEmail(json)
+def send_email_task(json):
+    return send_email(json)
 
 @task(ignore_result=True)
-def chargeTask(json):
+def charge_task(json):
     return charge(json)
 
-def startProcessFromS3(bucket_key):
-    chain = downloadAndParseSDRTask.s(bucket_key) | getCustomerDetailsTask.s() | generatePDFAndUploadTask.s() | sendEmailTask.s() | chargeTask.s() | uploadOrderLineToSalesForce.s()
+def start_process_from_s3(bucket_key):
+    chain = download_and_parse_sdr_task.s(bucket_key) | get_customer_details_task.s() | generate_pdf_and_upload_task.s() | send_email_task.s() | charge_task.s() | uploadOrderLineToSalesForce.s()
             
     chain()
 
-def startSyncProcessFromS3(bucket_key):
-    json = downloadAndParseSDRTask(bucket_key)
-    json = getCustomerDetailsTask(json)
-    json = generatePDFAndUploadTask(json) 
-    json = sendEmailTask(json)
-    json = chargeTask(json)
+def start_sync_process_from_s3(bucket_key):
+    json = download_and_parse_sdr_task(bucket_key)
+    json = get_customer_details_task(json)
+    json = generate_pdf_and_upload_task(json) 
+    json = send_email_task(json)
+    json = charge_task(json)
