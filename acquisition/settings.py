@@ -35,8 +35,8 @@ AUTH_PROFILE_MODULE = 'payment.UserProfile'
 # AMAZON WEB SERVICES (AWS)
 ######################################################
 
-AWS_ACCESS_KEY_ID     = 'AKIAJMHIR5XUG3EAMK7A'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID     = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
 
@@ -54,11 +54,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'acquisition',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'acquisition',                # Or path to database file if using sqlite3.
+        'USER': 'root',                       # Not used with sqlite3.
+        'PASSWORD': '',                       # Not used with sqlite3.
+        'HOST': 'localhost',                  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',                       # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -194,8 +194,8 @@ LOGGING = {
     }
 }
 
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+#import dj_database_url
+#DATABASES['default'] =  dj_database_url.config()
 
 BROKER_BACKEND = 'django'
 

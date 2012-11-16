@@ -27,17 +27,14 @@ Created on 06/11/2012
 
 from sforce.enterprise import SforceEnterpriseClient
 
+from os import environ
+
 SF_PRICELIST_ID = 'a13J0000000CtwvIAC'
 
 SF_WSDL_PATH = 'resources/wsdl/salesforce-enterprise.wsdl'
-SF_LOGIN     = 'agustin.martin@telefonica.com.dev'
-SF_PWD       = 'chipotl6'
-SF_TOKEN     = 'IVJeG9UJPc86xIY04jltqLoi'
-
-#SF_WSDL_PATH = 'resources/wsdl/mac-salesforce-enterprise.wsdl'
-#SF_LOGIN     = 'mac@telefonicadigital.es'
-#SF_PWD       = 'tenderete13SA'
-#SF_TOKEN     = 'zTlg3IiXhRQNqWN7mcxwF3LP'
+SF_LOGIN     = environ.get('SF_LOGIN')
+SF_PWD       = environ.get('SF_PWD')
+SF_TOKEN     = environ.get('SF_TOKEN')
 
 def connect():
     c = SforceEnterpriseClient(SF_WSDL_PATH)
