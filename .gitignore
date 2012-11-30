@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-venv
-*.pyc
-*~
-.svn
-=======
 *.py[cod]
 
 # virtualenv
@@ -42,4 +36,4 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
->>>>>>> fcf0eb47f507f660e3317f9b1862b63263a6f516
+
